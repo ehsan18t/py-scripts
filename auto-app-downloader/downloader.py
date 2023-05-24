@@ -319,10 +319,6 @@ def main():
         
 
 
-
-
-
-
 # Get download location from command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("dl", help="Download location")
@@ -334,4 +330,5 @@ if not dl_location:
     print("    - Please enter a download location.")
     sys.exit(1)
 
-main()
+if __name__ == "__main__":
+    main()

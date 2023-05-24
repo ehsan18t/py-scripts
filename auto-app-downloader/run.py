@@ -6,15 +6,15 @@ import argparse
 
 
 # Get download location from command line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument("dl", help="Download location")
-args = parser.parse_args()
-dl_location = args.dl
+# parser = argparse.ArgumentParser()
+# parser.add_argument("dl", help="Download location")
+# args = parser.parse_args()
+# dl_location = args.dl
 
-# exit if no args given
-if not dl_location:
-    print("    - Please enter a download location.")
-    sys.exit(1)
+# # exit if no args given
+# if not dl_location:
+#     print("    - Please enter a download location.")
+#     sys.exit(1)
 
 
 def install_packages(required_packages=[], env_name='venv'):
@@ -50,6 +50,8 @@ def run_script(script):
 
 def main():
     # Script Configs
+    # if not dl_location:
+    dl_location = os.path.join(os.getcwd(), 'apps')
     env_name = 'venv'
     script_file = os.path.join(os.getcwd(), 'downloader.py')
     venv = os.path.join(env_name, 'Scripts', 'python.exe')
@@ -81,5 +83,9 @@ def main():
     print('- Removing VENV')
     shutil.rmtree(env_name)
 
+    # Pause
+    subprocess.check_call(['PAUSE'])
 
-main()
+if __name__ == "__main__":
+    main()
+    subprocess.check_call(['PAUSE'])
