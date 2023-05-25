@@ -5,18 +5,6 @@ import shutil
 import argparse
 
 
-# Get download location from command line arguments
-# parser = argparse.ArgumentParser()
-# parser.add_argument("dl", help="Download location")
-# args = parser.parse_args()
-# dl_location = args.dl
-
-# # exit if no args given
-# if not dl_location:
-#     print("    - Please enter a download location.")
-#     sys.exit(1)
-
-
 def install_packages(required_packages=[], env_name='venv'):
     # Check if the required packages are installed
     not_installed = []
