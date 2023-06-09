@@ -146,6 +146,7 @@ class ItemSelectionApp:
         self.root = root
         self.version = '1.0.0'
         self.root.title(f"App Downloader v{self.version}")
+        self.root.resizable(False, False)
         self.style = Style(theme="flatly")
         self.cancel_downloads = False
         self.download_thread = None
