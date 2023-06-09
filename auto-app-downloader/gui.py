@@ -180,12 +180,10 @@ class AppDownloaderGUI:
         self.progress_label = ttk.Label(button_frame, text="")
         self.progress_label.pack(side="top", padx=5, pady=5)
 
-        self.select_all_button = ttk.Button(
-            button_frame, text="Select All", command=self.toggle_select_all, takefocus=False
-        )
+        self.select_all_button = ttk.Button(button_frame, text="Select All", command=self.toggle_select_all, takefocus=False)
         self.select_all_button.pack(side="left", padx=5)
 
-        self.download_button = ttk.Button(button_frame, text="Download Selected", command=self.download_selected_apps)
+        self.download_button = ttk.Button(button_frame, text="Download Selected", command=self.download_selected_apps, takefocus=False)
         self.download_button.pack(side="left", padx=5)
 
         self.cancel_button = ttk.Button(button_frame, text="Cancel", command=self.cancel_download)
