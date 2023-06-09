@@ -51,7 +51,7 @@ class App:
             print('Type doesn\'t exist!')
 
     def __str__(self) -> str:
-        return f'{self.name} {self.version}'
+        return f'{self.name} {self.version}.{self.ext}'
 
 
     # Generate links for different types
@@ -235,7 +235,7 @@ class ItemSelectionApp:
                 total_size = int(response.headers.get("content-length", 0))
                 block_size = 1024  # 1 Kibibyte
 
-                with open(f"{app}.exe", "wb") as file:
+                with open(f"{app}", "wb") as file:
                     downloaded_size = 0
                     for data in response.iter_content(block_size):
                         if self.cancel_downloads:
