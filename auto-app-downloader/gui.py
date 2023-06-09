@@ -141,7 +141,7 @@ class App:
                 self.version = match.group(1)
 
 
-class ItemSelectionApp:
+class AppDownloaderGUI:
     def __init__(self, root):
         self.root = root
         self.version = '1.0.0'
@@ -455,7 +455,7 @@ def get_app_list():
 
 
 root = tk.Tk()
-app = ItemSelectionApp(root)
+app = AppDownloaderGUI(root)
 root.mainloop()
 
 
