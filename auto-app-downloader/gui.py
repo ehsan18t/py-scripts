@@ -14,7 +14,7 @@ import tkinter.messagebox as messagebox
 
 
 class App:
-    dl_location: str = ''
+    dl_location: str = f'{os.getcwd()}/Apps' 
     version_pattern = r'([\d\.]+)'
     user_agent = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0',
@@ -225,6 +225,12 @@ class AppDownloaderGUI:
         self.download_thread = threading.Thread(target=self.download_apps, args=(selected_apps,))
         self.download_thread.start()
 
+    def create_dir(self):
+        if App.dl_location:
+            path = os.path.join(App.dl_location)
+            if not os.path.exists(path):
+                os.makedirs(path)
+
     def download_apps(self, apps):
         for app in apps:
             if self.cancel_downloads:
@@ -232,11 +238,13 @@ class AppDownloaderGUI:
 
             try:
                 app.generate_link()
+                self.create_dir() # create if path not exist
+                path = os.path.join(App.dl_location, f'{app.name}_{app.version}.{app.ext}')
                 response = app.hit_request(app.link, stream=True)
                 total_size = int(response.headers.get("content-length", 0))
                 block_size = 1024  # 1 Kibibyte
 
-                with open(f"{app}", "wb") as file:
+                with open(path, "wb") as file:
                     downloaded_size = 0
                     for data in response.iter_content(block_size):
                         if self.cancel_downloads:
