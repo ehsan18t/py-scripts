@@ -41,11 +41,11 @@ def main():
     # if not dl_location:
     dl_location = os.path.join(os.getcwd(), 'apps')
     env_name = 'venv'
-    script_file = os.path.join(os.getcwd(), 'downloader.py')
+    script_file = os.path.join(os.getcwd(), 'gui.py')
     venv = os.path.join(env_name, 'Scripts', 'python.exe')
     activate_script = os.path.join(env_name, 'Scripts', 'activate.bat')
     deactivate_script = os.path.join(env_name, 'Scripts', 'deactivate.bat')
-    required_packages = ["beautifulsoup4", "requests", "tqdm"]
+    required_packages = ["beautifulsoup4", "requests", "tqdm", "ttkbootstrap"]
 
     # Install required packages
     print('- Checking & Installing Packages')
