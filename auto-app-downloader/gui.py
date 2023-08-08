@@ -249,6 +249,8 @@ class AppDownloaderGUI:
                 path = os.path.join(App.dl_location, f'{app.name}_{app.version}.{app.ext}')
                 response = app.hit_request(app.link, stream=True)
                 total_size = int(response.headers.get("content-length", 0))
+                if total_size == 0:
+                    total_size = 1
                 block_size = 1024  # 1 Kibibyte
 
                 with open(path, "wb") as file:
