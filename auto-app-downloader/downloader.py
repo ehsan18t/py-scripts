@@ -120,9 +120,13 @@ class App:
         self.link = request.build_opener().open(req).geturl()
         # print(self.link)
         if self.link:
-            match = re.search(self.pattern, self.link)
-            if match:
-                self.version = match.group(1)
+            # check if version is fixed
+            if self.pattern.startswith('@FIXED '):
+                self.version = self.pattern.replace('@FIXED ', '')
+            else:
+                match = re.search(self.pattern, self.link)
+                if match:
+                    self.version = match.group(1)
         else:
             print('Failed to generate link')
 
@@ -219,10 +223,10 @@ def get_app_list():
             ),
             App(
                 'Chrome',
-                'exe',
-                'https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B17ED3958-CACC-CCE2-67EC-7E03965DA166%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe',
-                '',
-                Type.UNCHANGED.value
+                'msi',
+                'https://chromeenterprise.google/browser/download/thank-you/?platform=WIN64_MSI&channel=stable&usagestats=0',
+                '@FIXED Latest',
+                Type.REDIRECT.value
             ),
             App(
                 'FireFox',
