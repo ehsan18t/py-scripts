@@ -20,6 +20,7 @@ class Type(Enum):
     UNCHANGED = 4
     REDIRECT = 5
     UNCHANGED_BUT_VERSION = 6
+    DIRECT_THEN_REDIRECT = 7
 
 
 class App:
@@ -56,6 +57,8 @@ class App:
             self.__redirect_link()
         elif self.type == 6:
             self.__direct_link_but_version()
+        elif self.type == 7:
+            self.__get_link_then_redirect()
         else:
             print('Type doesn\'t exist!')
 
@@ -70,17 +73,21 @@ class App:
     def __fetch_soup(self):
         return BeautifulSoup(self.hit_request(self.webURL).content, "html.parser")
 
-    # TYPE: 1
-    # If the webURL page has direct link inside the 'a' tag
-    def __get_link(self):
+    def __get_link_base(self):
         soup = self.__fetch_soup()
         element = soup.find(self.element, href=re.compile(f'{self.pattern}.{self.ext}'))
         if not element:
             print(f'{self.name} with .{self.ext} extension not found!')
         else:
-            url = element.get("href")
-            self.link = self.baseURL + url
-            match = re.search(f'{self.pattern}.{self.ext}', url)
+            return self.baseURL + element.get("href")
+        return ''
+
+    # TYPE: 1
+    # If the webURL page has direct link inside the 'a' tag
+    def __get_link(self):
+        self.link = self.__get_link_base()
+        if self.link:
+            match = re.search(f'{self.pattern}.{self.ext}', self.link)
             self.version = match.group(1) if match else 'Unknown'
 
     # TYPE: 2
@@ -125,9 +132,10 @@ class App:
     # Not direct link. But will redirect to the direct link
     # so, we are catching that here.
     def __redirect_link(self):
-        req = request.Request(self.webURL, headers=App.user_agent)
-        self.link = request.build_opener().open(req).geturl()
-        print(self.link)
+        # req = request.Request(self.webURL, headers=App.user_agent)
+        # self.link = request.build_opener().open(req).geturl()
+        req = requests.get(self.webURL, allow_redirects=False)
+        self.link = req.headers['Location']
         if self.link:
             # check if version is fixed
             if self.pattern.startswith('@FIXED '):
@@ -152,6 +160,17 @@ class App:
             match = re.search(self.pattern, element.get_text())
             if match:
                 self.version = match.group(1)
+
+    # TYPE: 7
+    # This is basically a combination of type 1 and 5
+    # Where first we've to find link with type-1 and
+    # then redirect to the direct link with type-5 for downloading
+    def __get_link_then_redirect(self):
+        url = self.__get_link_base()
+        req = requests.get(url, allow_redirects=False)
+        self.link = req.headers['Location']
+        # req = request.Request(url, headers=App.user_agent)
+        # self.link = request.build_opener().open(req).geturl()
 
 
 class AppDownloaderGUI:
@@ -439,7 +458,7 @@ def get_app_list():
                 'msi',
                 'https://www.videolan.org/vlc/download-windows.html',
                 r'//get.videolan.org/vlc/(\d+\.\d+\.\d+)/win64/vlc-(\d+\.\d+\.\d+)-win64',
-                Type.DIRECT.value,
+                Type.DIRECT_THEN_REDIRECT.value,
                 'https:'
             ),
             App(
