@@ -1,12 +1,10 @@
 import os
-import sys
 import re
 import tkinter as tk
 from tkinter import ttk
 from ttkbootstrap import Style
 import threading
 import requests
-from urllib import request
 import json
 from bs4 import BeautifulSoup
 import tkinter.messagebox as messagebox
@@ -134,7 +132,8 @@ class App:
     def __redirect_link(self):
         # req = request.Request(self.webURL, headers=App.user_agent)
         # self.link = request.build_opener().open(req).geturl()
-        req = requests.get(self.webURL, allow_redirects=False)
+        req = requests.head(self.webURL, headers=App.user_agent, allow_redirects=False)
+        # print(req.headers)
         self.link = req.headers['Location']
         if self.link:
             # check if version is fixed
@@ -397,7 +396,7 @@ def get_app_list():
             App(
                 'Chrome',
                 'msi',
-                'https://chromeenterprise.google/browser/download/thank-you/?platform=WIN64_MSI&channel=stable&usagestats=1',
+                'https://chromeenterprise.google/browser/download/thank-you/?platform=WIN64_MSI&channel=stable&usagestats=0',
                 '@FIXED Latest',
                 Type.REDIRECT.value
             ),
