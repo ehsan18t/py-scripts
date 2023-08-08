@@ -396,9 +396,9 @@ def get_app_list():
             App(
                 'Chrome',
                 'msi',
-                'https://chromeenterprise.google/browser/download/thank-you/?platform=WIN64_MSI&channel=stable&usagestats=0',
-                '@FIXED Latest',
-                Type.REDIRECT.value
+                'https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi',
+                'Latest',
+                Type.UNCHANGED.value
             ),
             App(
                 'FireFox',
