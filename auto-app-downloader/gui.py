@@ -10,7 +10,16 @@ from urllib import request
 import json
 from bs4 import BeautifulSoup
 import tkinter.messagebox as messagebox
+from enum import Enum
 
+
+class Type(Enum):
+    DIRECT = 1
+    STATIC = 2
+    GITHUB = 3
+    UNCHANGED = 4
+    REDIRECT = 5
+    UNCHANGED_BUT_VERSION = 6
 
 
 class App:
@@ -317,7 +326,7 @@ def get_app_list():
                 'msi',
                 'https://www.7-zip.org/download.html',
                 r'.*?(\d{1,})-x64',
-                1,
+                Type.DIRECT.value,
                 'https://www.7-zip.org/'
             ),
             App(
@@ -325,7 +334,7 @@ def get_app_list():
                 'exe',
                 'https://www.rarlab.com/download.htm',
                 r'.*?winrar.*?64-(.*?)',
-                1,
+                Type.DIRECT.value,
                 'https://www.rarlab.com/'
             ),
             App(
@@ -333,21 +342,21 @@ def get_app_list():
                 'msi', 
                 'https://api.github.com/repos/d2phap/ImageGlass/releases/latest', 
                 r'ImageGlass_Kobe.*?64',
-                3
+                Type.GITHUB.value
             ),
             App(
                 'OBS Studio',
                 'exe', 
                 'https://api.github.com/repos/obsproject/obs-studio/releases/latest', 
                 r'OBS-Studio-(.*?)-Full-Installer-x64',
-                3
+                Type.GITHUB.value
             ),
             App(
                 'SumatraPDF',
                 'exe',
                 'https://www.sumatrapdfreader.org/download-free-pdf-viewer',
                 r'.*?SumatraPDF-(.*?)-64-install',
-                1,
+                Type.DIRECT.value,
                 'https://www.sumatrapdfreader.org/'
             ),
             App(
@@ -355,7 +364,7 @@ def get_app_list():
                 'exe',
                 'https://www.aimp.ru/?do=download&os=windows',
                 r'AIMP v.*?',
-                2,
+                Type.STATIC.value,
                 'https://aimp.ru/files/windows/builds/aimp_VERSION_w64.exe',
                 'h1'
             ),
@@ -364,49 +373,49 @@ def get_app_list():
                 'exe',
                 'https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B17ED3958-CACC-CCE2-67EC-7E03965DA166%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe',
                 '',
-                4
+                Type.UNCHANGED.value
             ),
             App(
                 'FireFox',
                 'exe',
                 'https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US',
                 r'/([\d.]+[a-z]*\d*)/',
-                5
+                Type.REDIRECT.value
             ),
             App(
                 'Github Desktop',
                 'exe',
                 'https://central.github.com/deployments/desktop/desktop/latest/win32?format=exe',
                 r'/([\d.a-z-]+)/(GitHubDesktopSetup-x64)',
-                5
+                Type.REDIRECT.value
             ),
             App(
                 'VSCode',
                 'msi',
                 'https://code.visualstudio.com/sha/download?build=stable&os=win32-x64',
                 r'-([\d\.]+)',
-                5
+                Type.REDIRECT.value
             ),
             App(
                 'Discord',
                 'exe',
                 'https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x86',
                 r'/(\d+(\.\d+)+)/',
-                5
+                Type.REDIRECT.value
             ),
             App(
                 'Notepad++',
                 'exe',
                 'https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases/latest',
                 r'npp\.(\d+\.)+\d+\.Installer\.x64',
-                3
+                Type.GITHUB.value
             ),
             App(
                 'SublimeText',
                 'exe',
                 'https://www.sublimetext.com/download',
                 r'Build .*?',
-                2,
+                Type.STATIC.value,
                 'https://download.sublimetext.com/sublime_text_build_VERSION_x64_setup.exe',
                 'h3'
             ),
@@ -415,7 +424,7 @@ def get_app_list():
                 'exe',
                 'https://www.qbittorrent.org/download',
                 r'Latest: .*?',
-                2,
+                Type.STATIC.value,
                 'https://altushost-swe.dl.sourceforge.net/project/qbittorrent/qbittorrent-win32/qbittorrent-VERSION/qbittorrent_VERSION_x64_setup.exe',
             ),
             App(
@@ -423,7 +432,7 @@ def get_app_list():
                 'msi',
                 'https://www.videolan.org/vlc/download-windows.html',
                 r'//get.videolan.org/vlc/(\d+\.\d+\.\d+)/win64/vlc-(\d+\.\d+\.\d+)-win64',
-                1,
+                Type.DIRECT.value,
                 'https:'
             ),
             App(
@@ -431,14 +440,14 @@ def get_app_list():
                 'exe',
                 'https://api.github.com/repos/brave/brave-browser/releases/latest',
                 r'BraveBrowserStandaloneSetup',
-                3
+                Type.GITHUB.value
             ),
             App(
                 'Anydesk',
                 'exe',
                 'https://anydesk.com/en/downloads/windows',
                 r'v([\d.]+)',
-                6,
+                Type.UNCHANGED_BUT_VERSION.value,
                 'https://download.anydesk.com/AnyDesk.exe',
                 'div'
             ),
@@ -447,14 +456,14 @@ def get_app_list():
                 'exe', 
                 'https://api.github.com/repos/telegramdesktop/tdesktop/releases/latest', 
                 r'/tsetup-x64\.(.*?)',
-                3
+                Type.GITHUB.value
             ),
             App(
                 'Zoom',
                 'exe',
                 'https://zoom.us/client/latest/ZoomInstaller.exe',
                 r'/([\d.]+[a-z]*\d*)/',
-                5
+                Type.REDIRECT.value
             ),
     ]
 
