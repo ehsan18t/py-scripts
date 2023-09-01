@@ -416,7 +416,7 @@ def get_app_list():
             ),
             App(
                 'VSCode',
-                'msi',
+                'exe',
                 'https://code.visualstudio.com/sha/download?build=stable&os=win32-x64',
                 r'-([\d\.]+)',
                 Type.REDIRECT.value
